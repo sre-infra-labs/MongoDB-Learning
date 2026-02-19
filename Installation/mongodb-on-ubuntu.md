@@ -23,7 +23,9 @@ sudo ss -tulnp | grep mongod
 # Connecting from Host Machine
 ```
 mongosh --port 27017
-mongosh "mongodb://admin:password123@localhost:27017"
+mongosh 'mongodb://admin:password123@localhost:27017'
+
+mongosh 'mongodb://mongodb_exporter:mongodb_exporter@pgpractice:27017'
 mongosh --host pgpractice -u admin -p $PGPWD
 
 # create admin user
