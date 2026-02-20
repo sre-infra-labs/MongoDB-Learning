@@ -1,6 +1,5 @@
 # MongoDB Exporter
 - [MongoDB Exporter from Percona](https://github.com/percona/mongodb_exporter)
-- [MongoDB Exporter from dcu](https://github.com/dcu/mongodb_exporter?tab=readme-ov-file)
 
 [Blog post](https://www.digitalocean.com/community/tutorials/how-to-monitor-mongodb-with-grafana-and-prometheus-on-ubuntu-20-04)
 
@@ -10,16 +9,12 @@ cd ~/Downloads
 
 # download binary
 wget https://github.com/percona/mongodb_exporter/releases/download/v0.47.2/mongodb_exporter-0.47.2.linux-amd64.tar.gz
-or
-wget https://github.com/dcu/mongodb_exporter/releases/download/v1.0.0/mongodb_exporter-linux-amd64
 
 # unzip tarball
 tar xvfz mongodb_exporter-*.linux-amd64.tar.gz
 
 # copy binary
 sudo cp ./mongodb_exporter-0.47.2.linux-amd64/mongodb_exporter /usr/local/bin/
-or
-sudo cp ./mongodb_exporter-linux-amd64 /usr/local/bin/mongodb_exporter
 
 sudo ls -l /usr/local/bin/mongo*
 
@@ -37,8 +32,6 @@ mongosh 'mongodb://mongodb_exporter:mongodb_exporter@pgpractice:27017'
 
 mongodb_exporter --mongodb.uri=mongodb://127.0.0.1:27017
 mongodb_exporter --mongodb.uri='mongodb://mongodb_exporter:mongodb_exporter@localhost:27017'
-or
-mongodb_exporter -mongodb.uri 'mongodb://mongodb_exporter:mongodb_exporter@localhost:27017'
 
 # Test if things worked
 curl http://localhost:9216/metrics
@@ -121,7 +114,7 @@ sudo curl http://localhost:9216/metrics
 Edit /etc/prometheus/prometheus.yml
 
 ```
-- job_name: mongodb
+- job_name: mongodb_exporter
   static_configs:
     - targets:
       - "pgpractice:9216"
@@ -129,23 +122,13 @@ Edit /etc/prometheus/prometheus.yml
 
 # Grafana Dashboards for MongoDB
 - [percona/grafana-dashboards](https://github.com/percona/grafana-dashboards/tree/main/dashboards/MongoDB)
+- [MongoDB Overview](https://grafana.com/grafana/dashboards/20192-mongodb-overview/) - working
+- [Mongodb Dashboard](https://grafana.com/grafana/dashboards/20867-mongodb-dashboard/) - working | only couple of panels not working
 
-```
-python misc/convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_Instances_Overview.json
+- [MongoDB](https://grafana.com/grafana/dashboards/14997-mongodb/) - partial - os working | mongodb not working
+or
+- [MongoDB](https://grafana.com/grafana/dashboards/2583-mongodb/) - partial - os working | mongodb not working
 
-# if fails due to python version
-2to3 -w misc/convert-dash-from-PMM.py -o . -n
-
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_Backup_Details.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_Cluster_Summary.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_Collections_Overview.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_InMemory_Details.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_Instances_Compare.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_Instances_Overview.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_Instance_Summary.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_MMAPv1_Details.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_Oplog_Details.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_ReplSet_Summary.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_Router_Summary.json
-python convert-dash-from-PMM.py dashboards/MongoDB/MongoDB_WiredTiger_Details.json
-```
+- [MongoDB Overview](https://grafana.com/grafana/dashboards/7353-mongodb-overview/) - not working
+- [MongoDB Instance Summary](https://grafana.com/grafana/dashboards/14547-mongodb-instance-summary/) - not working
+- 
