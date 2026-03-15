@@ -1,0 +1,266 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": { "type": "grafana", "uid": "-- Grafana --" },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "s" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 0, "y": 0 },
+      "id": 1,
+      "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "targets": [
+        { "expr": "mongodb_ss_uptime{instance=~\"$instance\"}", "instant": true, "legendFormat": "", "refId": "A" }
+      ],
+      "title": "Uptime",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 6, "y": 0 },
+      "id": 2,
+      "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "targets": [
+        { "expr": "mongodb_ss_connections{instance=~\"$instance\",conn_type=\"current\"}", "instant": true, "legendFormat": "", "refId": "A" }
+      ],
+      "title": "Current Connections",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 12, "y": 0 },
+      "id": 3,
+      "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "targets": [
+        { "expr": "mongodb_ss_mem_resident{instance=~\"$instance\"} * 1024 * 1024", "instant": true, "legendFormat": "", "refId": "A" }
+      ],
+      "title": "Resident Memory",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "max": 100, "min": 0, "unit": "percent" }, "overrides": [] },
+      "gridPos": { "h": 4, "w": 6, "x": 18, "y": 0 },
+      "id": 4,
+      "options": { "colorMode": "value", "graphMode": "none", "justifyMode": "auto", "orientation": "auto", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "textMode": "auto" },
+      "targets": [
+        { "expr": "100 * mongodb_ss_wt_cache_bytes_currently_in_the_cache{instance=~\"$instance\"} / clamp_min(mongodb_ss_wt_cache_maximum_bytes_configured{instance=~\"$instance\"}, 1)", "instant": true, "legendFormat": "", "refId": "A" }
+      ],
+      "title": "WiredTiger Cache Used %",
+      "type": "stat"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 4 },
+      "id": 5,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "expr": "mongodb_ss_connections{instance=~\"$instance\",conn_type=\"current\"}", "legendFormat": "current", "refId": "A" },
+        { "expr": "mongodb_ss_connections{instance=~\"$instance\",conn_type=\"active\"}", "legendFormat": "active", "refId": "B" },
+        { "expr": "mongodb_ss_connections{instance=~\"$instance\",conn_type=\"awaitingTopologyChanges\"}", "legendFormat": "awaitingTopologyChanges", "refId": "C" }
+      ],
+      "title": "Connections",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "ops" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 4 },
+      "id": 6,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "expr": "sum by (legacy_op_type) (rate(mongodb_ss_opcounters{instance=~\"$instance\"}[$__rate_interval]))", "legendFormat": "{{legacy_op_type}}", "refId": "A" }
+      ],
+      "title": "Opcounters / sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "Bps" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+      "id": 7,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "expr": "rate(mongodb_ss_network_bytesIn{instance=~\"$instance\"}[$__rate_interval])", "legendFormat": "bytes in", "refId": "A" },
+        { "expr": "rate(mongodb_ss_network_bytesOut{instance=~\"$instance\"}[$__rate_interval])", "legendFormat": "bytes out", "refId": "B" },
+        { "expr": "rate(mongodb_ss_network_numRequests{instance=~\"$instance\"}[$__rate_interval])", "legendFormat": "requests/sec", "refId": "C" }
+      ],
+      "title": "Network Traffic & Requests",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "µs" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+      "id": 8,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "expr": "rate(mongodb_ss_opLatencies_latency{instance=~\"$instance\",op_type=\"commands\"}[$__rate_interval]) / clamp_min(rate(mongodb_ss_opLatencies_ops{instance=~\"$instance\",op_type=\"commands\"}[$__rate_interval]), 1)", "legendFormat": "commands", "refId": "A" },
+        { "expr": "rate(mongodb_ss_opLatencies_latency{instance=~\"$instance\",op_type=\"reads\"}[$__rate_interval]) / clamp_min(rate(mongodb_ss_opLatencies_ops{instance=~\"$instance\",op_type=\"reads\"}[$__rate_interval]), 1)", "legendFormat": "reads", "refId": "B" },
+        { "expr": "rate(mongodb_ss_opLatencies_latency{instance=~\"$instance\",op_type=\"writes\"}[$__rate_interval]) / clamp_min(rate(mongodb_ss_opLatencies_ops{instance=~\"$instance\",op_type=\"writes\"}[$__rate_interval]), 1)", "legendFormat": "writes", "refId": "C" },
+        { "expr": "rate(mongodb_ss_opLatencies_latency{instance=~\"$instance\",op_type=\"transactions\"}[$__rate_interval]) / clamp_min(rate(mongodb_ss_opLatencies_ops{instance=~\"$instance\",op_type=\"transactions\"}[$__rate_interval]), 1)", "legendFormat": "transactions", "refId": "D" }
+      ],
+      "title": "Average Operation Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+      "id": 9,
+      "options": { "displayMode": "basic", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showUnfilled": true },
+      "targets": [
+        { "expr": "sum by (database) (mongodb_dbstats_dataSize{instance=~\"$instance\"})", "instant": true, "legendFormat": "{{database}}", "refId": "A" }
+      ],
+      "title": "Database Data Size",
+      "type": "bargauge"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "bytes" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+      "id": 10,
+      "options": { "displayMode": "basic", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showUnfilled": true },
+      "targets": [
+        { "expr": "sum by (database) (mongodb_dbstats_totalSize{instance=~\"$instance\"})", "instant": true, "legendFormat": "{{database}}", "refId": "A" }
+      ],
+      "title": "Database Total Size",
+      "type": "bargauge"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+      "id": 11,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "expr": "mongodb_ss_metrics_cursor_open{instance=~\"$instance\"}", "legendFormat": "{{csr_type}}", "refId": "A" }
+      ],
+      "title": "Open Cursors",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+      "id": 12,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "expr": "mongodb_ss_globalLock_currentQueue{instance=~\"$instance\"}", "legendFormat": "{{count_type}}", "refId": "A" }
+      ],
+      "title": "Global Lock Queue",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "ops" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 36 },
+      "id": 13,
+      "options": { "displayMode": "gradient", "orientation": "horizontal", "reduceOptions": { "calcs": ["lastNotNull"], "fields": "", "values": false }, "showUnfilled": true },
+      "targets": [
+        { "expr": "topk(10, sum by (database, collection) (rate(mongodb_top_total_count{instance=~\"$instance\"}[$__rate_interval])))", "instant": true, "legendFormat": "{{database}}.{{collection}}", "refId": "A" }
+      ],
+      "title": "Top 10 Collections by Activity",
+      "type": "bargauge"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "ops" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 36 },
+      "id": 14,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "expr": "sum by (database) (rate(mongodb_profile_slow_query_count{instance=~\"$instance\"}[$__rate_interval]))", "legendFormat": "{{database}}", "refId": "A" }
+      ],
+      "title": "Slow Query Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "Bps" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 0, "y": 44 },
+      "id": 15,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "expr": "rate(mongodb_ss_wt_cache_bytes_read_into_cache{instance=~\"$instance\"}[$__rate_interval])", "legendFormat": "read into cache", "refId": "A" },
+        { "expr": "rate(mongodb_ss_wt_cache_bytes_written_from_cache{instance=~\"$instance\"}[$__rate_interval])", "legendFormat": "written from cache", "refId": "B" }
+      ],
+      "title": "WiredTiger Cache I/O",
+      "type": "timeseries"
+    },
+    {
+      "datasource": { "type": "prometheus", "uid": "$datasource" },
+      "fieldConfig": { "defaults": { "unit": "none" }, "overrides": [] },
+      "gridPos": { "h": 8, "w": 12, "x": 12, "y": 44 },
+      "id": 16,
+      "options": { "legend": { "displayMode": "list", "placement": "bottom" }, "tooltip": { "mode": "multi", "sort": "desc" } },
+      "targets": [
+        { "expr": "rate(mongodb_ss_metrics_queryExecutor_scanned{instance=~\"$instance\"}[$__rate_interval]) / clamp_min(rate(mongodb_ss_metrics_document{instance=~\"$instance\",doc_op_type=\"returned\"}[$__rate_interval]), 1)", "legendFormat": "scanned/returned", "refId": "A" },
+        { "expr": "rate(mongodb_ss_metrics_queryExecutor_scannedObjects{instance=~\"$instance\"}[$__rate_interval]) / clamp_min(rate(mongodb_ss_metrics_document{instance=~\"$instance\",doc_op_type=\"returned\"}[$__rate_interval]), 1)", "legendFormat": "scannedObjects/returned", "refId": "B" }
+      ],
+      "title": "Query Scan Efficiency",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": ["mongodb", "mongodb_exporter", "prometheus"],
+  "templating": {
+    "list": [
+      {
+        "hide": 0,
+        "includeAll": false,
+        "label": "Datasource",
+        "multi": false,
+        "name": "datasource",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "type": "datasource"
+      },
+      {
+        "allValue": ".*",
+        "current": { "selected": true, "text": "All", "value": "$__all" },
+        "datasource": { "type": "prometheus", "uid": "$datasource" },
+        "definition": "label_values(mongodb_ss_uptime, instance)",
+        "hide": 0,
+        "includeAll": true,
+        "label": "Instance",
+        "multi": false,
+        "name": "instance",
+        "options": [],
+        "query": { "query": "label_values(mongodb_ss_uptime, instance)", "refId": "PrometheusVariableQueryEditor-VariableQuery" },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": { "from": "now-6h", "to": "now" },
+  "timezone": "",
+  "title": "MongoDB Exporter - Metrics Present in Repo Sample",
+  "uid": "mongo-exporter-repo",
+  "version": 1,
+  "weekStart": ""
+}
