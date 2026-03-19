@@ -1,0 +1,382 @@
+{
+  "generated_at": "2026-03-19T03:11:25.151303+00:00",
+  "dashboard": "Monitoring/mongodb_exporter_core_metrics_dashboard.json",
+  "panel_count": 35,
+  "rows": [
+    {
+      "title": "Overview",
+      "stat_panels": [
+        {
+          "title": "MongoDB Up",
+          "unit": "none",
+          "metrics": [
+            "mongodb_up"
+          ],
+          "description": "Shows whether the selected MongoDB target is scrapeable from Prometheus."
+        },
+        {
+          "title": "Uptime",
+          "unit": "s",
+          "metrics": [
+            "mongodb_ss_uptime"
+          ],
+          "description": "Server uptime in seconds since the mongod process started."
+        },
+        {
+          "title": "Current Connections",
+          "unit": "short",
+          "metrics": [
+            "mongodb_ss_connections{conn_type=\"current\"}"
+          ],
+          "description": "Current client connections accepted by MongoDB."
+        },
+        {
+          "title": "Connections Used %",
+          "unit": "percent",
+          "metrics": [
+            "mongodb_ss_connections{conn_type=\"current\"}",
+            "mongodb_ss_connections{conn_type=\"available\"}"
+          ],
+          "description": "Approximate connection pool utilization derived from current and available connection slots."
+        },
+        {
+          "title": "WT Cache Used %",
+          "unit": "percent",
+          "metrics": [
+            "mongodb_ss_wt_cache_bytes_currently_in_the_cache",
+            "mongodb_ss_wt_cache_maximum_bytes_configured"
+          ],
+          "description": "Percent of WiredTiger cache currently in use. Sustained high values can precede eviction pressure and stalls."
+        },
+        {
+          "title": "Max Scrape Time",
+          "unit": "ms",
+          "metrics": [
+            "collector_scrape_time_ms"
+          ],
+          "description": "Maximum exporter collector scrape time in milliseconds. Useful to spot exporter overhead or stalled collectors."
+        }
+      ],
+      "timeseries_panels": [
+        {
+          "title": "Opcounters - Ops/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_opcounters"
+          ],
+          "description": "Per-second MongoDB operation rate split by legacy operation type. Useful for seeing whether load is read-heavy, write-heavy, or command-heavy."
+        },
+        {
+          "title": "Average Operation Latency - ms",
+          "unit": "ms",
+          "metrics": [
+            "mongodb_ss_opLatencies_latency",
+            "mongodb_ss_opLatencies_ops"
+          ],
+          "description": "Average command, read, write, and transaction latency derived from cumulative opLatencies counters."
+        },
+        {
+          "title": "Slow Query Rate - Queries/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_profile_slow_query_count"
+          ],
+          "description": "Per-second slow query rate by database using profiler-derived counters. Spikes here often accompany user-visible slowness."
+        }
+      ]
+    },
+    {
+      "title": "Connections & Network",
+      "panels": [
+        {
+          "title": "Connections - Current Values",
+          "unit": "short",
+          "metrics": [
+            "mongodb_ss_connections"
+          ],
+          "description": "Current connection counters and queue gauges. Rising current or queued connections can indicate saturation or slow clients."
+        },
+        {
+          "title": "Connections Created - Count/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_connections{conn_type=\"totalCreated\"}"
+          ],
+          "description": "Rate of newly created connections. Spikes can point to connection churn, missing pooling, or client reconnect storms."
+        },
+        {
+          "title": "Network Throughput - Bytes/sec",
+          "unit": "Bps",
+          "metrics": [
+            "mongodb_ss_network_bytesIn",
+            "mongodb_ss_network_bytesOut",
+            "mongodb_ss_network_physicalBytesIn",
+            "mongodb_ss_network_physicalBytesOut"
+          ],
+          "description": "Logical and physical network throughput into and out of MongoDB. Useful for separating client traffic from wire-level compression effects."
+        },
+        {
+          "title": "Requests & Admission Control - Count/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_network_numRequests",
+            "mongodb_ss_network_ingressRequestRateLimiter_attemptedAdmissions",
+            "mongodb_ss_network_ingressRequestRateLimiter_successfulAdmissions",
+            "mongodb_ss_network_ingressRequestRateLimiter_exemptedAdmissions",
+            "mongodb_ss_network_ingressRequestRateLimiter_rejectedAdmissions"
+          ],
+          "description": "Per-second request volume plus ingress admission attempts, successes, exemptions, and rejects."
+        },
+        {
+          "title": "Cursors Open - Current Values",
+          "unit": "short",
+          "metrics": [
+            "mongodb_ss_metrics_cursor_open"
+          ],
+          "description": "Currently open cursors by cursor subtype. Rising no-timeout or pinned cursors can indicate application-side cursor leaks."
+        },
+        {
+          "title": "Cursor Lifecycle - Count/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_metrics_cursor_totalOpened",
+            "mongodb_ss_metrics_cursor_timedOut"
+          ],
+          "description": "Rate of cursor opens and cursor timeouts. Sudden timeout spikes often correlate with slow consumers or abandoned cursors."
+        }
+      ]
+    },
+    {
+      "title": "Memory & Cache",
+      "panels": [
+        {
+          "title": "Memory Footprint - Bytes",
+          "unit": "bytes",
+          "metrics": [
+            "mongodb_ss_mem_resident",
+            "mongodb_ss_wt_cache_bytes_currently_in_the_cache",
+            "mongodb_ss_wt_cache_tracked_dirty_bytes_in_the_cache"
+          ],
+          "description": "Resident memory from serverStatus plus key WiredTiger allocation gauges. Helps separate process growth from cache growth."
+        },
+        {
+          "title": "WT Cache Capacity - Bytes",
+          "unit": "bytes",
+          "metrics": [
+            "mongodb_ss_wt_cache_bytes_currently_in_the_cache",
+            "mongodb_ss_wt_cache_maximum_bytes_configured",
+            "mongodb_ss_wt_cache_tracked_dirty_bytes_in_the_cache"
+          ],
+          "description": "WiredTiger cache current bytes, configured maximum, and dirty bytes. Use this to judge whether memory pressure is driven by cache occupancy or dirty-page buildup."
+        },
+        {
+          "title": "WT Cache IO - Bytes/sec",
+          "unit": "Bps",
+          "metrics": [
+            "mongodb_ss_wt_cache_bytes_read_into_cache",
+            "mongodb_ss_wt_cache_bytes_written_from_cache"
+          ],
+          "description": "Rate of bytes read into and written from the WiredTiger cache. Large imbalances can hint at read bursts or eviction/checkpoint pressure."
+        },
+        {
+          "title": "WT Eviction Pressure - Count/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_wt_cache_number_of_times_eviction_trigger_was_reached",
+            "mongodb_ss_wt_cache_number_of_times_dirty_trigger_was_reached",
+            "mongodb_ss_wt_cache_operations_timed_out_waiting_for_space_in_cache",
+            "mongodb_ss_wt_cache_pages_selected_for_eviction_unable_to_be_evicted"
+          ],
+          "description": "Eviction trigger reaches, space wait timeouts, and failed eviction attempts. This is a high-signal panel when cache pressure becomes user-visible."
+        }
+      ]
+    },
+    {
+      "title": "Locks & Flow Control",
+      "panels": [
+        {
+          "title": "Global Lock Queue - Current Values",
+          "unit": "short",
+          "metrics": [
+            "mongodb_ss_globalLock_currentQueue"
+          ],
+          "description": "Readers, writers, and total operations currently queued on the global lock. Non-zero sustained queues usually merit deeper lock analysis."
+        },
+        {
+          "title": "Active Clients - Current Values",
+          "unit": "short",
+          "metrics": [
+            "mongodb_ss_globalLock_activeClients_readers",
+            "mongodb_ss_globalLock_activeClients_writers",
+            "mongodb_ss_globalLock_activeClients_total"
+          ],
+          "description": "Current active readers, writers, and total clients according to serverStatus.globalLock.activeClients."
+        },
+        {
+          "title": "Lock Acquire Rate - Count/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_locks_acquireCount"
+          ],
+          "description": "Global and collection lock acquisition rates by resource and lock mode. Useful when debugging contention spikes."
+        },
+        {
+          "title": "Flow Control State - Current Values",
+          "unit": "none",
+          "metrics": [
+            "mongodb_ss_flowControl_enabled",
+            "mongodb_ss_flowControl_isLagged",
+            "mongodb_ss_flowControl_locksPerKiloOp",
+            "mongodb_ss_flowControl_sustainerRate",
+            "mongodb_ss_flowControl_targetRateLimit"
+          ],
+          "description": "Shows whether flow control is enabled or lagged, along with the current locks-per-kilo-op and rate limits."
+        },
+        {
+          "title": "Flow Control Delay - Microseconds/sec",
+          "unit": "\u00b5s",
+          "metrics": [
+            "mongodb_ss_flowControl_isLaggedTimeMicros",
+            "mongodb_ss_flowControl_timeAcquiringMicros"
+          ],
+          "description": "Per-second rate of time spent lagged or acquiring tickets due to flow control. Sustained growth here often maps to replica lag pressure."
+        }
+      ]
+    },
+    {
+      "title": "Transactions & Errors",
+      "panels": [
+        {
+          "title": "Transactions - Current Values",
+          "unit": "short",
+          "metrics": [
+            "mongodb_ss_transactions_currentOpen",
+            "mongodb_ss_transactions_currentActive",
+            "mongodb_ss_transactions_currentInactive",
+            "mongodb_ss_transactions_currentPrepared"
+          ],
+          "description": "Current open, active, inactive, and prepared transactions. Rising open or prepared counts can block oplog visibility and consume cache."
+        },
+        {
+          "title": "Transactions Lifecycle - Count/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_transactions_totalStarted",
+            "mongodb_ss_transactions_totalCommitted",
+            "mongodb_ss_transactions_totalAborted",
+            "mongodb_ss_transactions_totalPrepared"
+          ],
+          "description": "Per-second transaction starts, commits, aborts, and prepares. Helpful for spotting sudden abort storms or changing transaction mix."
+        },
+        {
+          "title": "Operation Issues - Count/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_metrics_operation_writeConflicts",
+            "mongodb_ss_metrics_operation_prepareConflicts",
+            "mongodb_ss_metrics_operation_scanAndOrder",
+            "mongodb_ss_metrics_operation_numConnectionNetworkTimeouts",
+            "mongodb_ss_metrics_operation_killedDueToClientDisconnect",
+            "mongodb_ss_metrics_operation_temporarilyUnavailableErrors"
+          ],
+          "description": "High-signal error and contention counters, including write conflicts, prepare conflicts, scan-and-order, network timeouts, and client disconnect kills."
+        },
+        {
+          "title": "Asserts - Count/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_asserts"
+          ],
+          "description": "MongoDB assert rates by assert type. Any sustained non-user assert activity typically deserves investigation."
+        }
+      ]
+    },
+    {
+      "title": "Replication & HA",
+      "panels": [
+        {
+          "title": "Replication Apply & Network - Ops/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_metrics_repl_apply_ops",
+            "mongodb_ss_metrics_repl_network_ops",
+            "mongodb_ss_metrics_repl_syncSource_numSelections"
+          ],
+          "description": "Replication apply and network operation rates. Useful when troubleshooting lag, catch-up speed, or replication stalls."
+        },
+        {
+          "title": "Replication Batch Time - Milliseconds/sec",
+          "unit": "ms",
+          "metrics": [
+            "mongodb_ss_metrics_repl_apply_batches_totalMillis",
+            "mongodb_ss_metrics_repl_write_batches_totalMillis",
+            "mongodb_ss_metrics_repl_network_getmores_totalMillis",
+            "mongodb_ss_metrics_repl_network_oplogGetMoresProcessed_totalMillis"
+          ],
+          "description": "Per-second accumulation of replication batch and getMore processing time. Rising values indicate replication work is consuming more time each second."
+        },
+        {
+          "title": "Replication Queues & Waiters - Current Values",
+          "unit": "short",
+          "metrics": [
+            "mongodb_ss_metrics_repl_heartBeat_handleQueueSize",
+            "mongodb_ss_metrics_repl_executor_queues_networkInProgress",
+            "mongodb_ss_metrics_repl_waiters_replication"
+          ],
+          "description": "Current replication queue sizes and waiters. Useful when diagnosing heartbeat backlog or replication coordinator waits."
+        },
+        {
+          "title": "Replication Exceptions - Count/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_metrics_repl_syncSource_numSyncSourceChangesDueToSignificantlyCloserNode",
+            "mongodb_ss_metrics_repl_initialSync_failedAttempts",
+            "mongodb_ss_metrics_repl_stateTransition_totalOperationsKilled"
+          ],
+          "description": "Sync source changes, initial sync failures, and state-transition kills. These counters are useful when replica-set topology or recovery behavior is unstable."
+        }
+      ]
+    },
+    {
+      "title": "System Pressure",
+      "panels": [
+        {
+          "title": "Host Memory - Bytes",
+          "unit": "bytes",
+          "metrics": [
+            "mongodb_sys_memory_MemAvailable_kb",
+            "mongodb_sys_memory_MemFree_kb",
+            "mongodb_sys_memory_SwapFree_kb"
+          ],
+          "description": "Host free, available, and swap-free memory converted from kilobytes to bytes. Useful when MongoDB pressure is actually OS memory pressure."
+        },
+        {
+          "title": "Pressure Stall Time - Microseconds/sec",
+          "unit": "\u00b5s",
+          "metrics": [
+            "mongodb_ss_extra_info_pressure_cpu_some_totalMicros",
+            "mongodb_ss_extra_info_pressure_io_some_totalMicros",
+            "mongodb_ss_extra_info_pressure_memory_some_totalMicros"
+          ],
+          "description": "Per-second CPU, IO, and memory pressure stall time. Rising IO pressure often aligns with storage bottlenecks or checkpoint pressure."
+        },
+        {
+          "title": "Page Faults & Context Switches - Count/sec",
+          "unit": "ops",
+          "metrics": [
+            "mongodb_ss_extra_info_page_faults",
+            "mongodb_ss_extra_info_voluntary_context_switches",
+            "mongodb_ss_extra_info_involuntary_context_switches"
+          ],
+          "description": "OS-level page-fault and context-switch rates reported through serverStatus.extra_info. Useful for host-side contention or memory-churn diagnosis."
+        }
+      ]
+    }
+  ],
+  "selection_principle": "Focused troubleshooting metrics only; excludes long-tail/exporter-complete coverage from the all-metrics dashboard.",
+  "notes": {
+    "instance_variable": "Single-select instance variable with includeAll disabled.",
+    "query_strategy": "Curated panels mix gauges and rate() queries only when the metric semantics match the intended troubleshooting view.",
+    "source_of_truth": "Metric names and types come from Monitoring/mongodb_exporter_result.txt and the corrected inferred type pass."
+  }
+}

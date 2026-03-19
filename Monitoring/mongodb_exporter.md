@@ -131,4 +131,44 @@ or
 
 - [MongoDB Overview](https://grafana.com/grafana/dashboards/7353-mongodb-overview/) - not working
 - [MongoDB Instance Summary](https://grafana.com/grafana/dashboards/14547-mongodb-instance-summary/) - not working
+
+
+# Grafana Dashboard Specifications for AI Tool
+
+```
+Create grafana dashboard named mongodb_exporter_all_metrics_dashboard.json for me using data from mongodb_exporter_result.txt.
+
+Allow data source to be selected while importing. Make it Row based layout.
+
+Top row should contain Overview metrics.
+
+Then additional rows with various metrics by category. Some metrics might make more sense in time-series panels while some in stats panel or other types. Use your best judgement.
+
+Allow only single instance selection. Don't include all option. 
+
+Try to built/include all the metrics available on endpoint.
+
+Keep dashboard name like 'MongoDB Exporter - All Metrics'
+
+Add description for each metric in panel so that users can understand what the metric/panel represents.
+
+With same category & Row, don't mix metrics whose Standard Unit is different. For example, if you have metrics like mongodb_ss_network_bytesIn and mongodb_ss_network_bytesOut, then put them in different rows even though they are related.
+Wherever possible, define standard unit for metrics in panel.
+
+Try to add threshold based on best practices.
+
+If too many metrics are qualifying for a panel, then split them into multiple panels if there is slight difference in sub category.
+
+Since dashboard would contains metrics for single instance, panels containing data for single category & sub category, try to remove labels as much as possible so that panel is not too busy.
+
+Do this activity with Resumable Retry Plan. That means, break the work into multiple steps. keep saving intermediate result and progress so that you can resume the timed out work from last step.
+
+Below metrics seem to be counter type -
+- mongodb_ss_batchedDeletes_stagedSizeBytes
+- mongodb_ss_end
+- mongodb_ss_ftdcCollectionMetrics_collections
+- localTime
+- mongodb_ss_queues_ingress_exempt_totalTimeProcessingMicros and similar
 - 
+
+```

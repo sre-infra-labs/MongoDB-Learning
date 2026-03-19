@@ -1,0 +1,1887 @@
+{
+  "__inputs": [
+    {
+      "name": "DS_PROMETHEUS",
+      "label": "Prometheus",
+      "description": "",
+      "type": "datasource",
+      "pluginId": "prometheus",
+      "pluginName": "Prometheus"
+    }
+  ],
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "description": "Focused troubleshooting dashboard generated from curated MongoDB exporter metrics. Uses a single instance selector, row-based layout, type-aware PromQL, and per-panel descriptions.",
+  "editable": true,
+  "graphTooltip": 0,
+  "links": [],
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 1,
+      "panels": [],
+      "title": "Overview",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Shows whether the selected MongoDB target is scrapeable from Prometheus.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "red",
+                "value": null
+              },
+              {
+                "color": "green",
+                "value": 1
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 0,
+        "y": 1
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "max(mongodb_up{instance=\"$instance\"})",
+          "legendFormat": "MongoDB Up",
+          "refId": "A"
+        }
+      ],
+      "title": "MongoDB Up",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Server uptime in seconds since the mongod process started.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 4,
+        "y": 1
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "max(mongodb_ss_uptime{instance=\"$instance\"})",
+          "legendFormat": "Uptime",
+          "refId": "A"
+        }
+      ],
+      "title": "Uptime",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Current client connections accepted by MongoDB.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 8,
+        "y": 1
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "max(mongodb_ss_connections{instance=\"$instance\",conn_type=\"current\"})",
+          "legendFormat": "Current Connections",
+          "refId": "A"
+        }
+      ],
+      "title": "Current Connections",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Approximate connection pool utilization derived from current and available connection slots.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "red",
+                "value": 95
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 12,
+        "y": 1
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "100 * max(mongodb_ss_connections{instance=\"$instance\",conn_type=\"current\"}) / clamp_min(max(mongodb_ss_connections{instance=\"$instance\",conn_type=\"current\"}) + max(mongodb_ss_connections{instance=\"$instance\",conn_type=\"available\"}), 1)",
+          "legendFormat": "Connections Used %",
+          "refId": "A"
+        }
+      ],
+      "title": "Connections Used %",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Percent of WiredTiger cache currently in use. Sustained high values can precede eviction pressure and stalls.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "percent",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 80
+              },
+              {
+                "color": "red",
+                "value": 95
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 16,
+        "y": 1
+      },
+      "id": 6,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "100 * max(mongodb_ss_wt_cache_bytes_currently_in_the_cache{instance=\"$instance\"}) / clamp_min(max(mongodb_ss_wt_cache_maximum_bytes_configured{instance=\"$instance\"}), 1)",
+          "legendFormat": "WT Cache Used %",
+          "refId": "A"
+        }
+      ],
+      "title": "WT Cache Used %",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Maximum exporter collector scrape time in milliseconds. Useful to spot exporter overhead or stalled collectors.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms",
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 500
+              },
+              {
+                "color": "red",
+                "value": 2000
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 4,
+        "x": 20,
+        "y": 1
+      },
+      "id": 7,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "textMode": "auto"
+      },
+      "targets": [
+        {
+          "expr": "max(collector_scrape_time_ms{instance=\"$instance\"})",
+          "legendFormat": "Max Scrape Time",
+          "refId": "A"
+        }
+      ],
+      "title": "Max Scrape Time",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Per-second MongoDB operation rate split by legacy operation type. Useful for seeing whether load is read-heavy, write-heavy, or command-heavy.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 5
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (legacy_op_type) (rate(mongodb_ss_opcounters{instance=\"$instance\"}[$__rate_interval]))",
+          "legendFormat": "{{legacy_op_type}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Opcounters - Ops/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Average command, read, write, and transaction latency derived from cumulative opLatencies counters.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 5
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_opLatencies_latency{instance=\"$instance\",op_type=\"commands\"}[$__rate_interval]) / clamp_min(rate(mongodb_ss_opLatencies_ops{instance=\"$instance\",op_type=\"commands\"}[$__rate_interval]), 1) / 1000",
+          "legendFormat": "commands",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_opLatencies_latency{instance=\"$instance\",op_type=\"reads\"}[$__rate_interval]) / clamp_min(rate(mongodb_ss_opLatencies_ops{instance=\"$instance\",op_type=\"reads\"}[$__rate_interval]), 1) / 1000",
+          "legendFormat": "reads",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_opLatencies_latency{instance=\"$instance\",op_type=\"writes\"}[$__rate_interval]) / clamp_min(rate(mongodb_ss_opLatencies_ops{instance=\"$instance\",op_type=\"writes\"}[$__rate_interval]), 1) / 1000",
+          "legendFormat": "writes",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(mongodb_ss_opLatencies_latency{instance=\"$instance\",op_type=\"transactions\"}[$__rate_interval]) / clamp_min(rate(mongodb_ss_opLatencies_ops{instance=\"$instance\",op_type=\"transactions\"}[$__rate_interval]), 1) / 1000",
+          "legendFormat": "transactions",
+          "refId": "D"
+        }
+      ],
+      "title": "Average Operation Latency - ms",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Per-second slow query rate by database using profiler-derived counters. Spikes here often accompany user-visible slowness.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 5
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (database) (rate(mongodb_profile_slow_query_count{instance=\"$instance\"}[$__rate_interval]))",
+          "legendFormat": "{{database}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Slow Query Rate - Queries/sec",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 14
+      },
+      "id": 11,
+      "panels": [],
+      "title": "Connections & Network",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Current connection counters and queue gauges. Rising current or queued connections can indicate saturation or slow clients.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 15
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "mongodb_ss_connections{instance=\"$instance\",conn_type=~\"active|available|current|queuedForEstablishment|rejected\"}",
+          "legendFormat": "{{conn_type}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Connections - Current Values",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Rate of newly created connections. Spikes can point to connection churn, missing pooling, or client reconnect storms.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 15
+      },
+      "id": 13,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_connections{instance=\"$instance\",conn_type=\"totalCreated\"}[$__rate_interval])",
+          "legendFormat": "created/sec",
+          "refId": "A"
+        }
+      ],
+      "title": "Connections Created - Count/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Logical and physical network throughput into and out of MongoDB. Useful for separating client traffic from wire-level compression effects.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 15
+      },
+      "id": 14,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_network_bytesIn{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "bytes in",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_network_bytesOut{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "bytes out",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_network_physicalBytesIn{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "physical in",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(mongodb_ss_network_physicalBytesOut{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "physical out",
+          "refId": "D"
+        }
+      ],
+      "title": "Network Throughput - Bytes/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Per-second request volume plus ingress admission attempts, successes, exemptions, and rejects.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 23
+      },
+      "id": 15,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_network_numRequests{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "requests",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_network_ingressRequestRateLimiter_attemptedAdmissions{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "attempted",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_network_ingressRequestRateLimiter_successfulAdmissions{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "successful",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(mongodb_ss_network_ingressRequestRateLimiter_exemptedAdmissions{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "exempted",
+          "refId": "D"
+        },
+        {
+          "expr": "rate(mongodb_ss_network_ingressRequestRateLimiter_rejectedAdmissions{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "rejected",
+          "refId": "E"
+        }
+      ],
+      "title": "Requests & Admission Control - Count/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Currently open cursors by cursor subtype. Rising no-timeout or pinned cursors can indicate application-side cursor leaks.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 23
+      },
+      "id": 16,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "mongodb_ss_metrics_cursor_open{instance=\"$instance\"}",
+          "legendFormat": "{{csr_type}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Cursors Open - Current Values",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Rate of cursor opens and cursor timeouts. Sudden timeout spikes often correlate with slow consumers or abandoned cursors.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 23
+      },
+      "id": 17,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_metrics_cursor_totalOpened{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "opened",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_cursor_timedOut{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "timed out",
+          "refId": "B"
+        }
+      ],
+      "title": "Cursor Lifecycle - Count/sec",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 32
+      },
+      "id": 18,
+      "panels": [],
+      "title": "Memory & Cache",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Resident memory from serverStatus plus key WiredTiger allocation gauges. Helps separate process growth from cache growth.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 33
+      },
+      "id": 19,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "max(mongodb_ss_mem_resident{instance=\"$instance\"}) * 1024 * 1024",
+          "legendFormat": "resident",
+          "refId": "A"
+        },
+        {
+          "expr": "mongodb_ss_wt_cache_bytes_currently_in_the_cache{instance=\"$instance\"}",
+          "legendFormat": "wt cache",
+          "refId": "B"
+        },
+        {
+          "expr": "mongodb_ss_wt_cache_tracked_dirty_bytes_in_the_cache{instance=\"$instance\"}",
+          "legendFormat": "dirty cache",
+          "refId": "C"
+        }
+      ],
+      "title": "Memory Footprint - Bytes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "WiredTiger cache current bytes, configured maximum, and dirty bytes. Use this to judge whether memory pressure is driven by cache occupancy or dirty-page buildup.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 33
+      },
+      "id": 20,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "mongodb_ss_wt_cache_bytes_currently_in_the_cache{instance=\"$instance\"}",
+          "legendFormat": "current",
+          "refId": "A"
+        },
+        {
+          "expr": "mongodb_ss_wt_cache_maximum_bytes_configured{instance=\"$instance\"}",
+          "legendFormat": "max configured",
+          "refId": "B"
+        },
+        {
+          "expr": "mongodb_ss_wt_cache_tracked_dirty_bytes_in_the_cache{instance=\"$instance\"}",
+          "legendFormat": "dirty",
+          "refId": "C"
+        }
+      ],
+      "title": "WT Cache Capacity - Bytes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Rate of bytes read into and written from the WiredTiger cache. Large imbalances can hint at read bursts or eviction/checkpoint pressure.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "Bps"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 33
+      },
+      "id": 21,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_wt_cache_bytes_read_into_cache{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "read into cache",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_wt_cache_bytes_written_from_cache{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "written from cache",
+          "refId": "B"
+        }
+      ],
+      "title": "WT Cache IO - Bytes/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Eviction trigger reaches, space wait timeouts, and failed eviction attempts. This is a high-signal panel when cache pressure becomes user-visible.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 41
+      },
+      "id": 22,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_wt_cache_number_of_times_eviction_trigger_was_reached{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "eviction trigger",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_wt_cache_number_of_times_dirty_trigger_was_reached{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "dirty trigger",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_wt_cache_operations_timed_out_waiting_for_space_in_cache{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "space timeout",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(mongodb_ss_wt_cache_pages_selected_for_eviction_unable_to_be_evicted{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "unable to evict",
+          "refId": "D"
+        }
+      ],
+      "title": "WT Eviction Pressure - Count/sec",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 50
+      },
+      "id": 23,
+      "panels": [],
+      "title": "Locks & Flow Control",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Readers, writers, and total operations currently queued on the global lock. Non-zero sustained queues usually merit deeper lock analysis.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 51
+      },
+      "id": 24,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "mongodb_ss_globalLock_currentQueue{instance=\"$instance\"}",
+          "legendFormat": "{{count_type}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Global Lock Queue - Current Values",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Current active readers, writers, and total clients according to serverStatus.globalLock.activeClients.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 51
+      },
+      "id": 25,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "mongodb_ss_globalLock_activeClients_readers{instance=\"$instance\"}",
+          "legendFormat": "readers",
+          "refId": "A"
+        },
+        {
+          "expr": "mongodb_ss_globalLock_activeClients_writers{instance=\"$instance\"}",
+          "legendFormat": "writers",
+          "refId": "B"
+        },
+        {
+          "expr": "mongodb_ss_globalLock_activeClients_total{instance=\"$instance\"}",
+          "legendFormat": "total",
+          "refId": "C"
+        }
+      ],
+      "title": "Active Clients - Current Values",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Global and collection lock acquisition rates by resource and lock mode. Useful when debugging contention spikes.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 51
+      },
+      "id": 26,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (resource, lock_mode) (rate(mongodb_ss_locks_acquireCount{instance=\"$instance\",resource=~\"Global|Collection|Database|ReplicationStateTransition\"}[$__rate_interval]))",
+          "legendFormat": "{{resource}} {{lock_mode}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Lock Acquire Rate - Count/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Shows whether flow control is enabled or lagged, along with the current locks-per-kilo-op and rate limits.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "none"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 59
+      },
+      "id": 27,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "mongodb_ss_flowControl_enabled{instance=\"$instance\"}",
+          "legendFormat": "enabled",
+          "refId": "A"
+        },
+        {
+          "expr": "mongodb_ss_flowControl_isLagged{instance=\"$instance\"}",
+          "legendFormat": "lagged",
+          "refId": "B"
+        },
+        {
+          "expr": "mongodb_ss_flowControl_locksPerKiloOp{instance=\"$instance\"}",
+          "legendFormat": "locks/KOp",
+          "refId": "C"
+        },
+        {
+          "expr": "mongodb_ss_flowControl_sustainerRate{instance=\"$instance\"}",
+          "legendFormat": "sustainer rate",
+          "refId": "D"
+        },
+        {
+          "expr": "mongodb_ss_flowControl_targetRateLimit{instance=\"$instance\"}",
+          "legendFormat": "target rate",
+          "refId": "E"
+        }
+      ],
+      "title": "Flow Control State - Current Values",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Per-second rate of time spent lagged or acquiring tickets due to flow control. Sustained growth here often maps to replica lag pressure.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "\u00b5s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 59
+      },
+      "id": 28,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_flowControl_isLaggedTimeMicros{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "lagged time",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_flowControl_timeAcquiringMicros{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "acquiring time",
+          "refId": "B"
+        }
+      ],
+      "title": "Flow Control Delay - Microseconds/sec",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 68
+      },
+      "id": 29,
+      "panels": [],
+      "title": "Transactions & Errors",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Current open, active, inactive, and prepared transactions. Rising open or prepared counts can block oplog visibility and consume cache.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 69
+      },
+      "id": 30,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "mongodb_ss_transactions_currentOpen{instance=\"$instance\"}",
+          "legendFormat": "open",
+          "refId": "A"
+        },
+        {
+          "expr": "mongodb_ss_transactions_currentActive{instance=\"$instance\"}",
+          "legendFormat": "active",
+          "refId": "B"
+        },
+        {
+          "expr": "mongodb_ss_transactions_currentInactive{instance=\"$instance\"}",
+          "legendFormat": "inactive",
+          "refId": "C"
+        },
+        {
+          "expr": "mongodb_ss_transactions_currentPrepared{instance=\"$instance\"}",
+          "legendFormat": "prepared",
+          "refId": "D"
+        }
+      ],
+      "title": "Transactions - Current Values",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Per-second transaction starts, commits, aborts, and prepares. Helpful for spotting sudden abort storms or changing transaction mix.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 69
+      },
+      "id": 31,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_transactions_totalStarted{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "started",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_transactions_totalCommitted{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "committed",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_transactions_totalAborted{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "aborted",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(mongodb_ss_transactions_totalPrepared{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "prepared",
+          "refId": "D"
+        }
+      ],
+      "title": "Transactions Lifecycle - Count/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "High-signal error and contention counters, including write conflicts, prepare conflicts, scan-and-order, network timeouts, and client disconnect kills.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 69
+      },
+      "id": 32,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_metrics_operation_writeConflicts{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "write conflicts",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_operation_prepareConflicts{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "prepare conflicts",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_operation_scanAndOrder{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "scan & order",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_operation_numConnectionNetworkTimeouts{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "network timeouts",
+          "refId": "D"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_operation_killedDueToClientDisconnect{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "killed on disconnect",
+          "refId": "E"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_operation_temporarilyUnavailableErrors{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "temporarily unavailable",
+          "refId": "F"
+        }
+      ],
+      "title": "Operation Issues - Count/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "MongoDB assert rates by assert type. Any sustained non-user assert activity typically deserves investigation.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 77
+      },
+      "id": 33,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "sum by (assert_type) (rate(mongodb_ss_asserts{instance=\"$instance\"}[$__rate_interval]))",
+          "legendFormat": "{{assert_type}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Asserts - Count/sec",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 86
+      },
+      "id": 34,
+      "panels": [],
+      "title": "Replication & HA",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Replication apply and network operation rates. Useful when troubleshooting lag, catch-up speed, or replication stalls.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 87
+      },
+      "id": 35,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_metrics_repl_apply_ops{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "apply ops",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_repl_network_ops{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "network ops",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_repl_syncSource_numSelections{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "sync source selections",
+          "refId": "C"
+        }
+      ],
+      "title": "Replication Apply & Network - Ops/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Per-second accumulation of replication batch and getMore processing time. Rising values indicate replication work is consuming more time each second.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ms"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 87
+      },
+      "id": 36,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_metrics_repl_apply_batches_totalMillis{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "apply batches",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_repl_write_batches_totalMillis{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "write batches",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_repl_network_getmores_totalMillis{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "network getMores",
+          "refId": "C"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_repl_network_oplogGetMoresProcessed_totalMillis{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "oplog getMores",
+          "refId": "D"
+        }
+      ],
+      "title": "Replication Batch Time - Milliseconds/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Current replication queue sizes and waiters. Useful when diagnosing heartbeat backlog or replication coordinator waits.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "short"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 87
+      },
+      "id": 37,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "mongodb_ss_metrics_repl_heartBeat_handleQueueSize{instance=\"$instance\"}",
+          "legendFormat": "heartbeat queue",
+          "refId": "A"
+        },
+        {
+          "expr": "mongodb_ss_metrics_repl_executor_queues_networkInProgress{instance=\"$instance\"}",
+          "legendFormat": "network in progress",
+          "refId": "B"
+        },
+        {
+          "expr": "mongodb_ss_metrics_repl_waiters_replication{instance=\"$instance\"}",
+          "legendFormat": "replication waiters",
+          "refId": "C"
+        }
+      ],
+      "title": "Replication Queues & Waiters - Current Values",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Sync source changes, initial sync failures, and state-transition kills. These counters are useful when replica-set topology or recovery behavior is unstable.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 95
+      },
+      "id": 38,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_metrics_repl_syncSource_numSyncSourceChangesDueToSignificantlyCloserNode{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "sync source changed",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_repl_initialSync_failedAttempts{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "initial sync failed",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_metrics_repl_stateTransition_totalOperationsKilled{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "state transition killed",
+          "refId": "C"
+        }
+      ],
+      "title": "Replication Exceptions - Count/sec",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {
+        "h": 1,
+        "w": 24,
+        "x": 0,
+        "y": 104
+      },
+      "id": 39,
+      "panels": [],
+      "title": "System Pressure",
+      "type": "row"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Host free, available, and swap-free memory converted from kilobytes to bytes. Useful when MongoDB pressure is actually OS memory pressure.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "bytes"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 105
+      },
+      "id": 40,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "mongodb_sys_memory_MemAvailable_kb{instance=\"$instance\"} * 1024",
+          "legendFormat": "mem available",
+          "refId": "A"
+        },
+        {
+          "expr": "mongodb_sys_memory_MemFree_kb{instance=\"$instance\"} * 1024",
+          "legendFormat": "mem free",
+          "refId": "B"
+        },
+        {
+          "expr": "mongodb_sys_memory_SwapFree_kb{instance=\"$instance\"} * 1024",
+          "legendFormat": "swap free",
+          "refId": "C"
+        }
+      ],
+      "title": "Host Memory - Bytes",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "Per-second CPU, IO, and memory pressure stall time. Rising IO pressure often aligns with storage bottlenecks or checkpoint pressure.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "\u00b5s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 105
+      },
+      "id": 41,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_extra_info_pressure_cpu_some_totalMicros{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "cpu some",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_extra_info_pressure_io_some_totalMicros{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "io some",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_extra_info_pressure_memory_some_totalMicros{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "memory some",
+          "refId": "C"
+        }
+      ],
+      "title": "Pressure Stall Time - Microseconds/sec",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${DS_PROMETHEUS}"
+      },
+      "description": "OS-level page-fault and context-switch rates reported through serverStatus.extra_info. Useful for host-side contention or memory-churn diagnosis.",
+      "fieldConfig": {
+        "defaults": {
+          "unit": "ops"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 105
+      },
+      "id": 42,
+      "options": {
+        "legend": {
+          "displayMode": "list",
+          "placement": "bottom"
+        },
+        "tooltip": {
+          "mode": "multi",
+          "sort": "desc"
+        }
+      },
+      "targets": [
+        {
+          "expr": "rate(mongodb_ss_extra_info_page_faults{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "page faults",
+          "refId": "A"
+        },
+        {
+          "expr": "rate(mongodb_ss_extra_info_voluntary_context_switches{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "voluntary cs",
+          "refId": "B"
+        },
+        {
+          "expr": "rate(mongodb_ss_extra_info_involuntary_context_switches{instance=\"$instance\"}[$__rate_interval])",
+          "legendFormat": "involuntary cs",
+          "refId": "C"
+        }
+      ],
+      "title": "Page Faults & Context Switches - Count/sec",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "30s",
+  "schemaVersion": 39,
+  "style": "dark",
+  "tags": [
+    "mongodb",
+    "mongodb_exporter",
+    "core-metrics",
+    "troubleshooting"
+  ],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "",
+          "value": ""
+        },
+        "datasource": {
+          "type": "prometheus",
+          "uid": "${DS_PROMETHEUS}"
+        },
+        "definition": "label_values(mongodb_up, instance)",
+        "hide": 0,
+        "includeAll": false,
+        "label": "Instance",
+        "multi": false,
+        "name": "instance",
+        "options": [],
+        "query": {
+          "query": "label_values(mongodb_up, instance)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "skipUrlSync": false,
+        "sort": 1,
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-6h",
+    "to": "now"
+  },
+  "timezone": "",
+  "title": "MongoDB Exporter - Core Metrics",
+  "uid": "mongodb-exporter-core-metrics",
+  "version": 1,
+  "weekStart": ""
+}

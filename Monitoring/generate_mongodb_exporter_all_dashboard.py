@@ -7,6 +7,12 @@ from pathlib import Path
 
 SOURCE = Path("Monitoring/mongodb_exporter_result.txt")
 OUTPUT = Path("Monitoring/mongodb_exporter_all_metrics_dashboard.json")
+PROM_DS = {"type": "prometheus", "uid": "${DS_PROMETHEUS}"}
+LEGEND_FORMAT = (
+    "{{__name__}} {{collector}} {{database}} {{collection}} {{namespace}} "
+    "{{op_type}} {{legacy_op_type}} {{conn_type}} {{csr_type}} {{count_type}} "
+    "{{type}} {{state}} {{cmd_name}} {{member_state}} {{mountpoint}}"
+)
 
 
 def metric_names() -> list[str]:
@@ -70,9 +76,9 @@ def row_panel(panel_id: int, title: str, y: int) -> dict:
 
 
 def timeseries_panel(panel_id: int, title: str, prefix: str, x: int, y: int) -> dict:
-    expr = f'{{__name__=~"{re.escape(prefix)}($|_.*)",instance=~"$instance"}}'
+    expr = f'{{__name__=~"{re.escape(prefix)}($|_.*)",instance="$instance"}}'
     return {
-        "datasource": {"type": "prometheus", "uid": "$datasource"},
+        "datasource": PROM_DS,
         "fieldConfig": {"defaults": {}, "overrides": []},
         "gridPos": {"h": 8, "w": 12, "x": x, "y": y},
         "id": panel_id,
@@ -80,7 +86,7 @@ def timeseries_panel(panel_id: int, title: str, prefix: str, x: int, y: int) -> 
             "legend": {"displayMode": "list", "placement": "bottom"},
             "tooltip": {"mode": "multi", "sort": "desc"},
         },
-        "targets": [{"expr": expr, "legendFormat": "", "refId": "A"}],
+        "targets": [{"expr": expr, "legendFormat": LEGEND_FORMAT, "refId": "A"}],
         "title": title,
         "type": "timeseries",
     }
@@ -100,7 +106,7 @@ def build_dashboard() -> dict:
     panel_id, y = panel_id + 1, y + 1
     panels.append(
         {
-            "datasource": {"type": "prometheus", "uid": "$datasource"},
+            "datasource": PROM_DS,
             "fieldConfig": {"defaults": {}, "overrides": []},
             "gridPos": {"h": 8, "w": 24, "x": 0, "y": y},
             "id": panel_id,
@@ -108,7 +114,7 @@ def build_dashboard() -> dict:
                 "legend": {"displayMode": "list", "placement": "bottom"},
                 "tooltip": {"mode": "multi", "sort": "desc"},
             },
-            "targets": [{"expr": '{__name__=~"$metric_regex",instance=~"$instance"}', "legendFormat": "", "refId": "A"}],
+            "targets": [{"expr": '{__name__=~"$metric_regex",instance="$instance"}', "legendFormat": LEGEND_FORMAT, "refId": "A"}],
             "title": "Custom Metric Regex Explorer",
             "type": "timeseries",
         }
@@ -135,6 +141,16 @@ def build_dashboard() -> dict:
         y += 1
 
     return {
+        "__inputs": [
+            {
+                "name": "DS_PROMETHEUS",
+                "label": "Prometheus",
+                "description": "",
+                "type": "datasource",
+                "pluginId": "prometheus",
+                "pluginName": "Prometheus",
+            }
+        ],
         "annotations": {
             "list": [
                 {
@@ -157,8 +173,7 @@ def build_dashboard() -> dict:
         "tags": ["mongodb", "mongodb_exporter", "all-metrics"],
         "templating": {
             "list": [
-                {"hide": 0, "includeAll": False, "label": "Datasource", "multi": False, "name": "datasource", "options": [], "query": "prometheus", "refresh": 1, "regex": "", "skipUrlSync": False, "type": "datasource"},
-                {"allValue": ".*", "current": {"selected": True, "text": "All", "value": "$__all"}, "datasource": {"type": "prometheus", "uid": "$datasource"}, "definition": "label_values(mongodb_up, instance)", "hide": 0, "includeAll": True, "label": "Instance", "multi": False, "name": "instance", "options": [], "query": {"query": "label_values(mongodb_up, instance)", "refId": "PrometheusVariableQueryEditor-VariableQuery"}, "refresh": 1, "regex": "", "skipUrlSync": False, "sort": 1, "type": "query"},
+                {"current": {"selected": False, "text": "", "value": ""}, "datasource": PROM_DS, "definition": "label_values(mongodb_up, instance)", "hide": 0, "includeAll": False, "label": "Instance", "multi": False, "name": "instance", "options": [], "query": {"query": "label_values(mongodb_up, instance)", "refId": "PrometheusVariableQueryEditor-VariableQuery"}, "refresh": 1, "regex": "", "skipUrlSync": False, "sort": 1, "type": "query"},
                 {"current": {"selected": False, "text": "mongodb_.*|go_.*|process_.*|collector_.*", "value": "mongodb_.*|go_.*|process_.*|collector_.*"}, "hide": 0, "label": "Metric regex", "name": "metric_regex", "options": [], "query": "mongodb_.*|go_.*|process_.*|collector_.*", "skipUrlSync": False, "type": "textbox"},
             ]
         },
